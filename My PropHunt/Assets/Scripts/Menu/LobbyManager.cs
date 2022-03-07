@@ -3,6 +3,14 @@ using UnityEngine;
 using Photon.Pun;
 using TMPro;
 
+[System.Serializable]
+internal class InputFields
+{
+    [SerializeField] internal TMP_InputField _name;
+    [SerializeField] internal TMP_InputField _createRoom;
+    [SerializeField] internal TMP_InputField _joinRoom;
+}
+
 public class LobbyManager : MonoBehaviourPunCallbacks
 {
     [SerializeField] private float _waitTimeToStartLoadScene;
@@ -18,11 +26,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        _loadPanel.SetBool(GlobalStringsVars.IsLoadedAnim, true);
-
-        /*_inputFields._name.text = "213";
-        _inputFields._createRoom.text = "1";
-        CreateRoom();*/
+        _loadPanel.SetBool(GlobalStringsVars.IsLoadedAnimator, true);
     }
 
     public void CreateRoom()
@@ -56,18 +60,10 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     private IEnumerator LoadScene()
     {
-        _loadPanel.SetBool(GlobalStringsVars.IsLoadedAnim, false);
+        _loadPanel.SetBool(GlobalStringsVars.IsLoadedAnimator, false);
 
         yield return new WaitForSecondsRealtime(_waitTimeToStartLoadScene);
 
         PhotonNetwork.LoadLevel(GlobalStringsVars.GameSceneIndex);
-    }
-
-    [System.Serializable]
-    private struct InputFields
-    {
-        [SerializeField] internal TMP_InputField _name;
-        [SerializeField] internal TMP_InputField _createRoom;
-        [SerializeField] internal TMP_InputField _joinRoom;
     }
 }

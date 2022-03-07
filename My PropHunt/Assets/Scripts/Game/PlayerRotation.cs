@@ -10,7 +10,7 @@ public class PlayerRotation : PlayerInputs
     private Rigidbody _rigidbody;
     private PhotonView _photonView;
     private CharacterController _characterController;
-    private bool _isStopRotation;
+    private bool _isNowStopRotation;
 
     private void Awake()
     {
@@ -26,18 +26,18 @@ public class PlayerRotation : PlayerInputs
             return;
 
         bool isNowCharacter = _characterController.enabled;
-        bool isRotate = Shift;
+        bool isPressRotateButton = Shift;
 
-        if (isRotate == true && isNowCharacter == false)
+        if (isPressRotateButton == true && isNowCharacter == false)
         {
             transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, _camera.transform.eulerAngles.y, 0), _speed);
             _rigidbody.constraints = RigidbodyConstraints.FreezeRotation;
-            _isStopRotation = false;
+            _isNowStopRotation = false;
         }
-        else if (_isStopRotation == false)
+        else if (_isNowStopRotation == false)
         {
             _rigidbody.constraints = RigidbodyConstraints.None;
-            _isStopRotation = true;
+            _isNowStopRotation = true;
         }
     }
 }

@@ -4,9 +4,7 @@ using Photon.Pun;
 [RequireComponent(typeof(Rigidbody), typeof(PhotonView), typeof(CharacterController))]
 public class PlayerTransformation : PlayerInputs
 {
-    public bool IsNowCharacter => _character.activeSelf;
-
-    [SerializeField] private float _distanceToTransformate;
+    [SerializeField] private float _distanceToTransformateProp;
     [SerializeField] private LayerMask _transformable;
     [SerializeField] private LayerMask _groundeable;
     [SerializeField] private Transform _pointTopCharacter;
@@ -30,37 +28,46 @@ public class PlayerTransformation : PlayerInputs
         if (_photonView.IsMine == false)
             return;
 
-        bool isMouse0 = Mouse0;
-        bool isMouse1 = Mouse1;
+        bool isPressTransformInPropButton = Mouse0;
+        bool isPressTransformInCharacterButton = Mouse1;
 
-        if (isMouse0 == true && Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Camera.main.pixelWidth * 0.5f, Camera.main.pixelHeight * 0.5f)), out _rayHit, _distanceToTransformate, _transformable))
-        {
-            GameObject transformateProp = PhotonNetwork.Instantiate(_rayHit.transform.gameObject.name, transform.position, transform.rotation);
-            transformateProp.transform.parent = transform;
-            transformateProp.layer = 0;
-
-            SetBoolValueInComponentsOnSwap(false);
-            DestroyCurrentProp();
-
-            _currentProp = transformateProp;
-
-            EventManager.SwapProp();
-        }
-        else if (isMouse1 == true && _character.activeSelf == false)
-        {
-            transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
-            Debug.DrawRay(_pointTopCharacter.position, Vector3.down * (-_character.transform.localPosition.y - -_pointTopCharacter.position.y), Color.red, 5);
-            if (Physics.Raycast(_pointTopCharacter.localPosition, Vector3.down, out _rayHit, -_character.transform.localPosition.y - -_pointTopCharacter.position.y, _groundeable) && +_rayHit.point.y + -_character.transform.localPosition.y > transform.position.y)
-                transform.position = new Vector3(transform.position.x, +_rayHit.point.y + -_character.transform.localPosition.y, transform.position.z);
-
-            SetBoolValueInComponentsOnSwap(true);
-            DestroyCurrentProp();
-
-            EventManager.SwapProp();
-        }
+        if (isPressTransformInPropButton == true && Physics.Raycast(Camera.main.ScreenPointToRay(new Vector3(Camera.main.pixelWidth * 0.5f, Camera.main.pixelHeight * 0.5f)), out _rayHit, _distanceToTransformateProp, _transformable))
+            TransformInPropOnNameOnNetwork(_rayHit.transform.gameObject.name);
+        else if (isPressTransformInCharacterButton == true && _character.activeSelf == false)
+            TransformInCharacterOnNetwork();
     }
 
-    private void SetBoolValueInComponentsOnSwap(bool value)
+    private void TransformInPropOnNameOnNetwork(string nameProp)
+    {
+        GameObject transformateProp = PhotonNetwork.Instantiate(nameProp, transform.position, transform.rotation);
+
+        transformateProp.transform.parent = transform;
+        transformateProp.layer = GlobalStringsVars.DefaultLayer;
+
+        SetBoolValueInComponentsAtTransform(false);
+        OnTransform();
+
+        _currentProp = transformateProp;
+    }
+
+    private void TransformInCharacterOnNetwork()
+    {
+        transform.rotation = Quaternion.Euler(0, transform.eulerAngles.y, 0);
+
+        if (Physics.Raycast(_pointTopCharacter.localPosition, Vector3.down, out _rayHit, -_character.transform.localPosition.y - -_pointTopCharacter.position.y, _groundeable) && +_rayHit.point.y + -_character.transform.localPosition.y > transform.position.y)
+            transform.position = new Vector3(transform.position.x, +_rayHit.point.y + -_character.transform.localPosition.y, transform.position.z);
+
+        SetBoolValueInComponentsAtTransform(true);
+        OnTransform();
+    }
+
+    private void OnTransform()
+    {
+        DestroyCurrentPropFromNetwork();
+        EventManager.SwapProp();
+    }
+
+    private void SetBoolValueInComponentsAtTransform(bool value)
     {
         _rigidbody.isKinematic = value;
         _characterController.enabled = value;
@@ -69,7 +76,7 @@ public class PlayerTransformation : PlayerInputs
             _character.SetActive(value);
     }
 
-    private void DestroyCurrentProp()
+    private void DestroyCurrentPropFromNetwork()
     {
         if (_currentProp != null)
             PhotonNetwork.Destroy(_currentProp);

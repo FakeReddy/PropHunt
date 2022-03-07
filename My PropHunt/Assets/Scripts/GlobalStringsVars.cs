@@ -11,13 +11,13 @@
 
     #region Animator
 
-    public const string IsLoadedAnim = "IsLoaded";
-    public const string ValueAnim = "Value";
+    public const string IsLoadedAnimator = "IsLoaded";
+    public const string ValueAnimator = "Value";
 
-    public const int IdleValueAnim = 0;
-    public const int WalkValueAnim = 1;
-    public const int RunValueAnim = 2;
-    public const int FallValueAnim = 3;
+    public const int IdleValueAnimator = 0;
+    public const int WalkValueAnimator = 1;
+    public const int RunValueAnimator = 2;
+    public const int FallValueAnimator = 3;
 
     #endregion
 
@@ -34,6 +34,12 @@
 
     public const string GameVersion = "0.0.2";
     public const string NoneInString = "";
+
+    #endregion
+
+    #region Layers
+
+    public const int DefaultLayer = 0;
 
     #endregion
 

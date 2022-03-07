@@ -1,8 +1,32 @@
 ﻿using UnityEngine;
 using Photon.Pun;
+using System.Collections;
 
-[RequireComponent(typeof(Rigidbody), typeof(PhotonView), typeof(PlayerGravity))]
-[RequireComponent(typeof(CharacterController))]
+[System.Serializable]
+internal class ItemJump
+{
+    [SerializeField] internal float _force;
+    [SerializeField] internal int _additionalCountJumps;
+
+    internal Rigidbody _rigidbody;
+}
+
+[System.Serializable]
+internal class CharacterJump
+{
+    [SerializeField] internal float _height;
+    [SerializeField] internal float _speed;
+    [SerializeField] internal int _additionalCountJumps;
+    [SerializeField] internal AnimationCurve _animationCurve;
+    [SerializeField] internal float _maxTimeInAnimationCurve = 1;
+
+    internal bool _isNowNeedJump;
+    internal float _velocityJump;
+    internal CharacterController _characterController;
+}
+
+[RequireComponent(typeof(PlayerGravity), typeof(PhotonView), typeof(ActorView))]
+[RequireComponent(typeof(CharacterController), typeof(Rigidbody))]
 public class PlayerJump : PlayerInputs
 {
     [SerializeField] private int _currentCountJumps;
@@ -11,13 +35,15 @@ public class PlayerJump : PlayerInputs
 
     private PlayerGravity _playerGravity;
     private PhotonView _photonView;
+    private ActorView _actorView;
 
     private void Awake()
     {
         _characterJump._characterController = GetComponent<CharacterController>();
+        _itemJump._rigidbody = GetComponent<Rigidbody>();
         _playerGravity = GetComponent<PlayerGravity>();
         _photonView = GetComponent<PhotonView>();
-        _itemJump._rigidbody = GetComponent<Rigidbody>();
+        _actorView = GetComponent<ActorView>();
     }
 
     private void Update()
@@ -25,70 +51,52 @@ public class PlayerJump : PlayerInputs
         if (_photonView.IsMine == false)
             return;
 
-        bool isPressJump = Space;
+        bool isPressJumpButton = Space;
+        bool isOnGround = _playerGravity.IsOnGround;
 
-        if (isPressJump == true)
+        if (isOnGround == true)
+            SetMaxJumps();
+
+        if (isPressJumpButton == true)
         {
             bool isNowCharacter = _characterJump._characterController.enabled;
-
-            if (_playerGravity.IsGrounded == true)
-                SetMaxJumps();
 
             if(_currentCountJumps > 0)
             {
                 if (isNowCharacter == true)
-                    JumpCharacter();
+                    StartCoroutine(JumpInCharacterForm());
                 else
                     _itemJump._rigidbody.velocity = new Vector3(_itemJump._rigidbody.velocity.x, _itemJump._force, _itemJump._rigidbody.velocity.z);
 
                 _currentCountJumps--;
             }
         }
-
-        if(_characterJump._isNeedJump == true)
-        {
-            _characterJump._characterController.Move(Vector3.up * (_characterJump._velocityJump * Time.deltaTime));
-            _characterJump._velocityJump -= _characterJump._gravityForce;
-
-            if (_characterJump._velocityJump <= _characterJump._minSpeedJump)
-            {
-                _characterJump._isNeedJump = false;
-                _playerGravity.UseGravity();
-            }
-        }
     }
 
-    private void JumpCharacter()
+    private IEnumerator JumpInCharacterForm()
     {
+        float velocityJump = 0;
+        float progress = 0;
+
         _playerGravity.DontUseGravity();
-        _characterJump._isNeedJump = true;
-        _characterJump._velocityJump = _characterJump._height;
+
+        while (progress < _characterJump._maxTimeInAnimationCurve)
+        {
+            velocityJump += _characterJump._speed * Time.deltaTime;
+            progress = velocityJump / _characterJump._maxTimeInAnimationCurve;
+
+            _characterJump._characterController.Move(Vector3.up * (_characterJump._animationCurve.Evaluate(progress) * (_characterJump._height * (_characterJump._speed * Time.deltaTime))));
+            _actorView.SetValue(GlobalStringsVars.FallValueAnimator);
+
+            yield return null;
+        }
+
+        _actorView.SetValue(GlobalStringsVars.FallValueAnimator);
+        _playerGravity.UseGravity();
     }
 
     private void SetMaxJumps()
     {
         _currentCountJumps = _characterJump._characterController.enabled == true ? _characterJump._additionalCountJumps : _itemJump._additionalCountJumps;
-    }
-
-    [System.Serializable]
-    private struct CharacterJump
-    {
-        [SerializeField] internal float _height;
-        [SerializeField] internal float _gravityForce;
-        [SerializeField] internal float _minSpeedJump;
-        [SerializeField] internal int _additionalCountJumps;
-
-        internal bool _isNeedJump;
-        internal float _velocityJump;
-        internal CharacterController _characterController;
-    }
-
-    [System.Serializable]
-    private struct ItemJump
-    {
-        [SerializeField] internal float _force;
-        [SerializeField] internal int _additionalCountJumps;
-
-        internal Rigidbody _rigidbody;
     }
 }

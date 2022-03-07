@@ -16,7 +16,7 @@ public class PlayerMovement : PlayerInputs
     private PhotonView _photonView;
     private PlayerGravity _playerGravity;
     private CharacterController _characterController;
-    private float _nVelocityRotationToDirection;
+    private float _velocityRotationToDirection;
 
     private void Awake()
     {
@@ -34,7 +34,7 @@ public class PlayerMovement : PlayerInputs
             return;
 
         bool isNowCharacter = _characterController.enabled;
-        bool isGrounded = _playerGravity.IsGrounded;
+        bool isOnGround = _playerGravity.IsOnGround;
         bool isPressRunButton = Shift;
 
         float horizontal = Horizontal;
@@ -42,8 +42,8 @@ public class PlayerMovement : PlayerInputs
 
         Vector3 direction = new Vector3(horizontal, 0, vertical);
 
-        if (isNowCharacter == true)
-            _actorView.SetValue(_playerGravity.IsGrounded == true ? GlobalStringsVars.IdleValueAnim : GlobalStringsVars.FallValueAnim);
+        if (isNowCharacter == true && isOnGround == true)
+            _actorView.SetValue(GlobalStringsVars.IdleValueAnimator);
 
         if (direction.magnitude != 0)
         {
@@ -59,23 +59,21 @@ public class PlayerMovement : PlayerInputs
             }
             else
             {
-                float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, angle, ref _nVelocityRotationToDirection, _rangeSmoothTimeRotationToDirection);
+                float smoothAngle = Mathf.SmoothDampAngle(transform.eulerAngles.y, angle, ref _velocityRotationToDirection, _rangeSmoothTimeRotationToDirection);
                 direction = direction.normalized * (_speedInCharacter * Time.deltaTime);
                 transform.rotation = Quaternion.Euler(0, smoothAngle, 0);
-                _actorView.SetValue(GlobalStringsVars.WalkValueAnim);
+                _actorView.SetValue(GlobalStringsVars.WalkValueAnimator);
 
-                if (isPressRunButton == true && isGrounded == true)
+                if (isPressRunButton == true && isOnGround == true)
                 {
                     direction = direction.normalized * ((_speedInCharacter + _addingToSpeedIfRunningInCharacter) * Time.deltaTime);
-                    _actorView.SetValue(GlobalStringsVars.RunValueAnim);
+                    _actorView.SetValue(GlobalStringsVars.RunValueAnimator);
                 }
-                else if (isGrounded == false)
-                    _actorView.SetValue(GlobalStringsVars.FallValueAnim);
 
                 _characterController.Move(direction);
             }
         }
-        else if (isGrounded == false && isNowCharacter == false)
+        else if (isOnGround == false && isNowCharacter == false)
             _rigidbody.velocity = new Vector3(0, _rigidbody.velocity.y, 0);
     }
 }

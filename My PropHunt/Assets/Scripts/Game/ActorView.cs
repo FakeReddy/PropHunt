@@ -6,6 +6,6 @@ public class ActorView : MonoBehaviour
 
     public void SetValue(int value)
     {
-        _animator.SetInteger(GlobalStringsVars.ValueAnim, value);
+        _animator.SetInteger(GlobalStringsVars.ValueAnimator, value);
     }
 }

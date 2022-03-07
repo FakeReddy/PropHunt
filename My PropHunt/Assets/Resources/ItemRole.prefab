@@ -349,7 +349,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5674712010635163750}
   m_Layer: 0
-  m_Name: Point Top Character
+  m_Name: Top Point Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -827,10 +827,43 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _currentCountJumps: 0
   _characterJump:
-    _height: 15
-    _gravityForce: 0.1
-    _minSpeedJump: 0
+    _height: 20
+    _speed: 5
     _additionalCountJumps: 2
+    _animationCurve:
+      serializedVersion: 2
+      m_Curve:
+      - serializedVersion: 3
+        time: -0.076853074
+        value: -0.00029119404
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      - serializedVersion: 3
+        time: 0.0155334845
+        value: 0.065944865
+        inSlope: 2.3933647
+        outSlope: 2.3933647
+        tangentMode: 0
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.053677235
+      - serializedVersion: 3
+        time: 0.03414305
+        value: 0.15029088
+        inSlope: 0
+        outSlope: 0
+        tangentMode: 136
+        weightedMode: 0
+        inWeight: 0.33333334
+        outWeight: 0.33333334
+      m_PreInfinity: 2
+      m_PostInfinity: 2
+      m_RotationOrder: 4
+    _maxTimeInAnimationCurve: 1
   _itemJump:
     _force: 10
     _additionalCountJumps: 3
@@ -846,7 +879,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f322f52b7016db40bf982361fa3348f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _distanceToTransformate: 100
+  _distanceToTransformateProp: 25
   _transformable:
     serializedVersion: 2
     m_Bits: 512
@@ -869,9 +902,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _force: 0.2
-  _startVelocity: 0.02
-  _radiusCheckGrounded: 0.8624
-  _pointCheckOnGrounded: {fileID: 2217359227446215598}
+  _beginVelocity: 0
+  _radiusCheckGround: 0.86
+  _checkPointOnGround: {fileID: 2217359227446215598}
   _groundeable:
     serializedVersion: 2
     m_Bits: 768
@@ -1242,122 +1275,6 @@ MonoBehaviour:
   m_BiasX: 0
   m_BiasY: 0
   m_CenterOnActivate: 1
---- !u!1 &3515196010574379258
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 3515196010574379260}
-  - component: {fileID: 3515196010574379263}
-  - component: {fileID: 3515196010574379262}
-  - component: {fileID: 3515196010574379257}
-  - component: {fileID: 3515196010574379259}
-  m_Layer: 0
-  m_Name: Object
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &3515196010574379260
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3515196010574379258}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
-  m_Children: []
-  m_Father: {fileID: 6474081762023675740}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &3515196010574379263
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3515196010574379258}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &3515196010574379262
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3515196010574379258}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
---- !u!65 &3515196010574379257
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3515196010574379258}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3515196010574379259
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3515196010574379258}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ObservedComponentsFoldoutOpen: 1
-  Group: 0
-  prefixField: -1
-  Synchronization: 3
-  OwnershipTransfer: 0
-  observableSearch: 2
-  ObservedComponents: []
-  sceneViewId: 0
-  InstantiationId: 0
-  isRuntimeInstantiated: 0
 --- !u!1 &3515196011082406425
 GameObject:
   m_ObjectHideFlags: 0
@@ -1656,7 +1573,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3515196011585381736}
-  m_LocalRotation: {x: -0.018189492, y: -0.000000011719908, z: -2.1321438e-10, w: 0.9998346}
+  m_LocalRotation: {x: -0.018189488, y: 0.000000017203536, z: 3.1297526e-10, w: 0.9998346}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
@@ -2451,6 +2368,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2217359227446215598}
+  - component: {fileID: 7454404876345350531}
   m_Layer: 0
   m_Name: Point Check On Grounded
   m_TagString: Untagged
@@ -2472,6 +2390,19 @@ Transform:
   m_Father: {fileID: 3515196010226502860}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!135 &7454404876345350531
+SphereCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5602892838697051841}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  serializedVersion: 2
+  m_Radius: 0.86
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5671939559780277635
 GameObject:
   m_ObjectHideFlags: 0
@@ -2597,7 +2528,6 @@ Transform:
   - {fileID: 235390051507874285}
   - {fileID: 1551733901277263816}
   - {fileID: 1257458922620671154}
-  - {fileID: 3515196010574379260}
   m_Father: {fileID: 3515196010226502860}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
